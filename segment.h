@@ -10,7 +10,9 @@ extern int glyph[11][9];
 
 
 void segment(int a[7], int offset,int on_color, int off_color);
-void draw_segment(int x, int y, byte color, byte rotation);
-void draw_number(int x, int y, int color);
+void drawSegmentSize(int x,int y,int iX_max,int jY_max, byte color, byte rotation);
+void drawSegment(int x, int y, byte color, byte rotation);
+void drawNumber(int x, int y, int color);
+void drawSmallNumber(int x, int y, byte size, int color);
 
 #endif

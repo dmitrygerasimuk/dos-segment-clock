@@ -5,10 +5,14 @@
 /*      github.com/dmitrygerasimuk     */
 /*      Borland C++ 3.1                */
 
+/* fullscreen seconds */
+
+
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
 #include <dos.h>
+#include <time.h>
 #include "vga.h"
 #include "palette.h"
 #include "segment.h"
@@ -36,8 +40,8 @@ segment(glyph[h1],22,    flash_h1,0x02 );
 segment(glyph[h2],32,    flash_h2,0x02 );
 segment(glyph[m1],42,    flash_m1,0x02 );
 segment(glyph[m2],52,flash_m2 ,0x02 );
-segment(glyph[s1],62,flash_s1,0x02);
-segment(glyph[s2],72,flash_s1,0x02);
+segment(glyph[s1],62,0xFF,0x02);
+segment(glyph[s2],72,0xFF,0x02);
 /*
 segment(glyph[10],82,dark_glitch,dark_glitch);
 segment(glyph[10],92,flash_h1,darkch(t->hsecond + 2) % 0x02 );
@@ -52,7 +56,7 @@ segment(glyph[10],132,flash_h1,darkch(t->hsecond + 4) % 0x02);
 
 int main() {
 
-int c;
+int c; int i,j;
 struct dostime_t t;
 struct RGB_Color col;
 setMode(VGA_256_COLOR_MODE);
@@ -60,12 +64,7 @@ setMode(VGA_256_COLOR_MODE);
 turnOffPalette();
 waitRetrace();
 
-drawNumber(15,58, 22);
-drawNumber(67,58, 32);
-drawNumber(119, 58, 42);
-drawNumber(171,58,52);
-drawNumber(223,58,62);
-drawNumber(275,58,72);
+
 
 /*
 drawNumber(15,-35,82);
@@ -83,6 +82,16 @@ drawNumber(223,150,122);
 drawNumber(275,150,132);
 
 */
+
+
+ for (i=0; i<8; i++) {
+	randomize();
+	for (j=0;j<14;j=j+2) {
+
+		drawSmallNumber(15+(20*j),4+(29*i),1,62);
+        drawSmallNumber(15+(20*(j+1)),4+(29*i),1,72);
+	}
+ }
 
  while ( c > 127) {
  _dos_gettime(&t);

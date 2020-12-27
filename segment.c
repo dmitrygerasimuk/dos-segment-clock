@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <conio.h>
-#include <stdlib.h>
-#include <dos.h>
+ 
 #include "vga.h"
 #include "segment.h"
 #include "palette.h"
@@ -17,7 +14,7 @@ int glyph[11][9] = {
 	{ 1,0,0,0,1,1,1}, /* seven */
 	{ 1,1,1,1,1,1,1}, /* eight */
 	{ 1,1,1,0,1,1,1}, /* nine  */
-  { 0,0,0,0,0,0,0}  /* empty */
+    { 0,0,0,0,0,0,0}  /* empty */
 	};
 
 void segment(int a[7], int offset,int on_color, int off_color)
@@ -40,39 +37,66 @@ void segment(int a[7], int offset,int on_color, int off_color)
 }
 
 }
+ 
 
-void draw_segment(int x, int y, byte color, byte rotation)
+void drawSegmentSize(int x,int y,int iX_max,int jY_max, byte color, byte rotation)
 {
-int i,j;
-int i_max=27,j_max=6;
-if (rotation > 0) { i_max=6;j_max=27; }
+int iX,jY;
+byte iX_max_=iX_max,jY_max_=jY_max;
+if (rotation > 0) { iX_max=jY_max_;jY_max=iX_max_; }
 
-for (i=0; i<i_max; i++) {
-	for (j=0; j<j_max; j++) {
 
-		if  ( ( (x+i)>0 &&  (y+j) > 0 ) && ( (x+i) < X_MAX ) && (y+j) < Y_MAX ) plot_pixel_fast(x+i,y+j,color);
-	 }
-  }
+
+for (iX=0; iX<iX_max; iX++) {
+	for (jY=0; jY<jY_max; jY++) {
+
+		if  ( ( (x+iX)>0 &&  (y+jY) > 0 ) && ( (x+iX) < X_MAX ) && (y+jY) < Y_MAX )  plot_pixel_fast(x+iX,y+jY,color);
+	}
 
 
 }
+}
+
+void drawSegment(int x, int y, byte color, byte rotation)
+{
+drawSegmentSize(x,y,27,6,color,rotation);
+}
+
+void drawSmallNumber(int x, int y, byte size, int color)
+{
+
+//byte size=15;
+byte Xsize=size*4;
+byte Ysize=size;
+//byte gap = size / 2;
+//byte gap=1;
+
+ drawSegmentSize(x+Ysize, y-Ysize, Xsize, Ysize,	      color,0);
+ drawSegmentSize(x+Ysize,y+Xsize,Xsize ,Ysize ,	      color+1,0);
+ drawSegmentSize(x+Ysize, y+Xsize+Xsize+Ysize, Xsize, Ysize,color+2,0);
+ drawSegmentSize(x,y+Xsize+Ysize,  Xsize,Ysize ,	      color+3,1);
+ drawSegmentSize(x            ,    y,Xsize,Ysize,	      color+4,1);
+ drawSegmentSize(x+Xsize+Ysize, y+Xsize+Ysize, Xsize ,Ysize ,color+5,1);
+ drawSegmentSize(x+Xsize+Ysize,y, Xsize,Ysize ,color+6,1);
 
 
-void draw_number(int x, int y, int color)
+
+}
+void drawNumber(int x, int y, int color)
 {
 
 x=x-15;
 y=y-58;
 
 
-draw_segment(15+x, 58+y,  color,0);
-draw_segment(15+x, 93+y,  color+1,0);
-draw_segment(15+x, 130+y, color+2,0);
+drawSegment(15+x, 58+y,  color,0);
+drawSegment(15+x, 93+y,  color+1,0);
+drawSegment(15+x, 130+y, color+2,0);
 
-draw_segment( 8+x, 101+y, color+3,1);
-draw_segment( 8+x,  65+y, color+4,1);
-draw_segment(43+x, 101+y, color+5,1);
-draw_segment(43+x,  65+y, color+6,1);
+drawSegment( 8+x, 101+y, color+3,1);
+drawSegment( 8+x,  65+y, color+4,1);
+drawSegment(43+x, 101+y, color+5,1);
+drawSegment(43+x,  65+y, color+6,1);
 
 
 
