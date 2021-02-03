@@ -1,9 +1,19 @@
 #include <dos.h>
+#include <stdio.h>
+ 
+
+#include <stdlib.h>
+
 #include "vga.h"
 
 
 byte *VGA=(byte *)0xA0000000L; 
 word *my_clock=(word *)0x0000046C;
+
+
+ 
+ 
+ 
 
 void waitRetrace(void)
 {
